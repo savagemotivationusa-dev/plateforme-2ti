@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plateforme 2TI — Informatique</title>
+  <meta name="description" content="Plateforme d'étude d'informatique pour la 2ème année secondaire (2TI), Tunisie : cours, résumés bilingues FR/AR, exercices, devoirs avec barème et correction interactive.">
+  <meta name="theme-color" content="#3552d6">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    /* Thème appliqué avant l'affichage pour éviter le clignotement. */
+    (function () {
+      var t = null;
+      try { t = (JSON.parse(localStorage.getItem("plateforme2ti:v1")) || {}).theme; } catch (e) {}
+      if (!t) t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#view">Aller au contenu</a>
+
+  <header class="topbar">
+    <button id="menuBtn" class="icon-btn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="sidebar"></button>
+    <a class="brand" href="#/accueil" aria-label="Accueil">
+      <span class="logo">2TI</span>
+      <span>Informatique<small>2ème année secondaire</small></span>
+    </a>
+    <form id="searchForm" class="search" role="search" autocomplete="off">
+      <label class="sr-only" for="searchInput" style="position:absolute;left:-999px">Rechercher</label>
+      <input id="searchInput" type="search" placeholder="Rechercher : variable, boucle, TDO, Python…" aria-autocomplete="list" aria-controls="suggest">
+      <div id="suggest" class="suggest" hidden></div>
+    </form>
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Changer de thème"></button>
+  </header>
+
+  <div class="layout">
+    <nav id="sidebar" class="sidebar" aria-label="Navigation principale"></nav>
+    <div id="scrim" class="scrim"></div>
+    <main id="view" tabindex="-1" aria-live="polite"></main>
+  </div>
+
+  <noscript><p style="padding:24px">Cette plateforme nécessite JavaScript pour fonctionner.</p></noscript>
+
+  <script src="data/chapters.js"></script>
+  <script src="data/courses-1.js"></script>
+  <script src="data/courses-2.js"></script>
+  <script src="data/courses-3.js"></script>
+  <script src="data/questions-1.js"></script>
+  <script src="data/questions-2.js"></script>
+  <script src="data/questions-devoirs.js"></script>
+  <script src="data/devoirs.js"></script>
+  <script src="data/summaries.js"></script>
+  <script src="data/refs.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/grader.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/views-learn.js"></script>
+  <script src="js/views-practice.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
