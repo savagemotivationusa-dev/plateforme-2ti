@@ -8,11 +8,12 @@
   <meta name="theme-color" content="#3552d6">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/maths.css">
   <script>
     /* Thème appliqué avant l'affichage pour éviter le clignotement. */
     (function () {
       var t = null;
-      try { t = (JSON.parse(localStorage.getItem("plateforme2ti:v1")) || {}).theme; } catch (e) {}
+      try { t = localStorage.getItem("plateforme2ti:theme") || (JSON.parse(localStorage.getItem("plateforme2ti:v1")) || {}).theme; } catch (e) {}
       if (!t) t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
       document.documentElement.setAttribute("data-theme", t);
     })();
@@ -43,6 +44,12 @@
 
   <noscript><p style="padding:24px">Cette plateforme nécessite JavaScript pour fonctionner.</p></noscript>
 
+  <script>
+    window.APP_SUBJECTS = [
+      { label: "Informatique", href: "index.html", current: true },
+      { label: "Mathématiques", href: "maths/index.html" }
+    ];
+  </script>
   <script src="data/chapters.js"></script>
   <script src="data/courses-1.js"></script>
   <script src="data/courses-2.js"></script>

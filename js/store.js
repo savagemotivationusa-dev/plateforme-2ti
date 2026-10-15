@@ -2,7 +2,7 @@
    Tout est protégé par try/catch : le site fonctionne même sans stockage. */
 (function (root) {
   "use strict";
-  const KEY = "plateforme2ti:v1";
+  const KEY = root.STORE_KEY || "plateforme2ti:v1";
   const defaults = () => ({
     read: {},        // { lessonId: timestamp }
     recent: [],      // derniers ids de leçons ouvertes

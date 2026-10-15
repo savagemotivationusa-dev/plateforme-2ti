@@ -5,7 +5,7 @@
   const $ = (s) => document.querySelector(s);
   const view = $("#view");
 
-  const NAV = [
+  const NAV = root.APP_NAV || [
     ["", "Apprendre"],
     ["accueil", "Accueil", "home"], ["cours", "Cours", "book"], ["resumes", "Résumés FR / AR", "list"],
     ["algorithmes", "Algorithmes", "flow"], ["python", "Python", "code"],
@@ -16,7 +16,7 @@
     ["progression", "Progression", "chart"], ["correction", "Dernière correction", "check"],
     ["notes", "Notes de contenu", "info"]
   ];
-  const ALIAS = { "": "accueil", lecon: "cours", devoir: "devoirs", recherche: "" };
+  const ALIAS = root.APP_ALIAS || { "": "accueil", lecon: "cours", devoir: "devoirs", recherche: "" };
 
   function parse() {
     const raw = (location.hash || "").replace(/^#\/?/, "");
@@ -34,6 +34,10 @@
     const nav = $("#sidebar");
     nav.replaceChildren();
     const active = ALIAS[name] !== undefined ? ALIAS[name] : name;
+    if (root.APP_SUBJECTS) {
+      nav.append(h("div", { class: "subject-switch", role: "group", "aria-label": "Matière" }, root.APP_SUBJECTS.map((sj) =>
+        h("a", { href: sj.href, class: "subj" + (sj.current ? " on" : ""), "aria-current": sj.current ? "true" : null, text: sj.label }))));
+    }
     NAV.forEach((n) => {
       if (!n[0]) { nav.append(h("div", { class: "grp", text: n[1] })); return; }
       const a = h("a", { class: "nav-link", href: "#/" + n[0] }, U.icon(n[2]), h("span", { text: n[1] }));
@@ -71,6 +75,7 @@
     const t = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", t);
     S().theme = t; root.Store.save();
+    try { root.localStorage.setItem("plateforme2ti:theme", t); } catch (e) { /* ignoré */ }
     paintTheme();
   });
   paintTheme();

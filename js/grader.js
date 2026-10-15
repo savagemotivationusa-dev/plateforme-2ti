@@ -19,6 +19,11 @@
     condition: "mauvaise condition",
     resultat: "mauvais résultat",
     concept: "erreur de concept",
+    calcul: "erreur de calcul",
+    signe: "erreur de signe",
+    methode: "erreur de méthode",
+    domaine: "valeur interdite / domaine oublié",
+    forme: "forme de réponse non conforme",
     vide: "pas de réponse"
   };
 
@@ -73,12 +78,18 @@
   const round4 = (x) => Math.round(x * 4) / 4;
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 
+  const isMathAccept = (a) => a && typeof a === "object" && !(a instanceof RegExp) && a.math !== undefined;
   function matchAccept(student, accept, cs) {
+    // Réponses mathématiques : comparaison par équivalence (voir js/mathcheck.js)
+    for (const a of accept) {
+      if (isMathAccept(a) && root.MathCheck && root.MathCheck.equiv(student, a.math, a)) return true;
+    }
     const nf = cs ? normTextCS : normText;
     const ns = nf(student);
     if (ns === "") return false;
     const nsNum = toNumber(ns);
     for (const a of accept) {
+      if (isMathAccept(a)) continue;
       if (a instanceof RegExp) { if (a.test(ns)) return true; continue; }
       const na = nf(a);
       if (na === ns) return true;
@@ -90,7 +101,8 @@
 
   function firstAccept(a) {
     const f = a.find((x) => !(x instanceof RegExp));
-    return f !== undefined ? String(f) : "";
+    if (f === undefined) return "";
+    return isMathAccept(f) ? (f.show || String(f.math)) : String(f);
   }
 
   function statusOf(earned, points) {

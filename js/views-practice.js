@@ -8,6 +8,15 @@
 
   /* ====================================================================== FORMULAIRES DE QUESTIONS */
   let uid = 0;
+  const isMathQ = (q) => q.math || (q.accept || []).some((a) => a && a.math !== undefined) || (q.fields || []).some((f) => (f.accept || []).some((a) => a && a.math !== undefined));
+  const MATH_SYMS = ["√", "π", "²", "³", "^", "≤", "≥", "∞", "∪", "∅", "ℝ", "\\"];
+  function mathBar(el, inputs) {
+    let last = inputs[0];
+    inputs.forEach((i) => i.addEventListener("focus", () => { last = i; }));
+    const bar = h("div", { class: "sym-bar math-bar" }, h("span", { text: "Symboles :" }),
+      MATH_SYMS.map((c) => h("button", { type: "button", title: "Insérer " + c, "aria-label": "Insérer " + c, onclick: () => { last.focus(); last.setRangeText(c, last.selectionStart, last.selectionEnd, "end"); last.dispatchEvent(new Event("input", { bubbles: true })); } }, c)));
+    el.append(bar);
+  }
   function questionForm(q, label) {
     const el = h("section", { class: "question", id: "q-" + q.id });
     const les = lessonById[q.relatedLesson];
@@ -36,7 +45,9 @@
       get = () => { const c = opts.querySelector("input:checked"); return c ? c.value === "true" : null; };
     } else if (q.type === "text") {
       const inp = h("input", { type: "text", "aria-label": "Ta réponse", placeholder: "Ta réponse", autocomplete: "off", autocapitalize: "off", spellcheck: "false" });
+      if (q.hint) el.append(h("div", { class: "q-hint", html: fmt(q.hint) }));
       el.append(inp);
+      if (isMathQ(q)) mathBar(el, [inp]);
       get = () => inp.value;
     } else if (q.type === "fields") {
       const grid = h("div", { class: "field-grid" });
@@ -45,7 +56,9 @@
         grid.append(h("label", null, h("span", { html: fmt(f.label) }), inp));
         return inp;
       });
+      if (q.hint) el.append(h("div", { class: "q-hint", html: fmt(q.hint) }));
       el.append(grid);
+      if (isMathQ(q)) mathBar(el, inps);
       get = () => inps.map((i) => i.value);
     } else {
       const ta = h("textarea", { class: "code-in", rows: 7, spellcheck: "false", autocapitalize: "off", autocomplete: "off", "aria-label": "Ta réponse (code)",
@@ -243,6 +256,11 @@
       rs.forEach((r, k) => rows.push(["Question " + (k + 1), U.fmtNum(r.earned) + " / " + U.fmtNum(r.points) + "  " + (r.status === "correct" ? "✅" : r.status === "partial" ? "⚠️" : "❌")]));
     });
     else an.results.forEach((r, k) => rows.push(["Question " + (k + 1), U.fmtNum(r.earned) + " / " + U.fmtNum(r.points) + "  " + (r.status === "correct" ? "✅" : r.status === "partial" ? "⚠️" : "❌")]));
+    if (dev && D.devoirDocs && D.devoirDocs[dev.id]) {
+      const doc = D.devoirDocs[dev.id];
+      root_.append(h("details", { class: "acc doc-corr" }, h("summary", { text: "Corrigé détaillé et barème du document de référence" }),
+        h("div", { class: "acc-body lesson-html", html: (doc.source ? "<p><em>" + U.esc(doc.source) + "</em></p>" : "") + doc.corrige })));
+    }
     root_.prepend(h("details", { class: "acc" }, h("summary", { text: "Barème et points obtenus" }), h("div", { class: "acc-body" }, U.table(["Question", "Points"], rows, { cls: "bareme" }))));
     return root_;
   }
@@ -404,6 +422,11 @@
     root_.append(h("details", { class: "acc", open: true }, h("summary", { text: "Barème détaillé" }), h("div", { class: "acc-body" }, U.table(["Question", "Points"], rows, { cls: "bareme" }),
       h("p", { class: "muted", text: "À la correction, chaque question est notée selon ce barème : points partiels possibles pour les réponses incomplètes." }))));
 
+    if (D.devoirDocs && D.devoirDocs[d.id]) {
+      const doc = D.devoirDocs[d.id];
+      root_.append(h("details", { class: "acc" }, h("summary", { text: "Énoncé original du document de référence" }),
+        h("div", { class: "acc-body lesson-html", html: (doc.source ? "<p><em>" + U.esc(doc.source) + "</em></p>" : "") + doc.enonce })));
+    }
     const forms = [];
     d.exercices.forEach((ex, i) => {
       const p = ex.questions.reduce((s, id) => s + qById[id].points, 0);
@@ -511,16 +534,18 @@
     const idx = [];
     const add = (type, title, text, href) => idx.push({ type, title, text: strip(text), norm: U.normSearch(title + " " + strip(text)), tnorm: U.normSearch(title), href });
     L.forEach((l) => {
+      if (App.lessonSearchText) { add("Cours", lnum(l) + " " + l.title, App.lessonSearchText(l), "#/lecon/" + l.id); return; }
       const parts = [l.concept, l.rule, ...(l.memorize || []), ...(l.understand || []), ...(l.errors || []), ...(l.devoir || []), l.express,
         ...(l.notes || []).map((n) => n.title + " " + n.text), ...(l.snippets || []).map((s) => s.title + " " + s.code),
         ...(l.tables || []).flatMap((t) => [t.title, ...t.rows.map((r) => r.join(" "))]),
         ...(l.examples || []).flatMap((e) => [e.titre, e.enonce, e.traitement, e.algo, e.python, ...e.explication]), l.application.enonce];
       add("Cours", lnum(l) + " " + l.title, parts.join(" "), "#/lecon/" + l.id);
     });
-    D.summaries.forEach((s) => s.cards.forEach((c) => add("Résumé", chapById[s.chapter].title + " — " + c.h, c.fr.join(" "), "#/resumes?c=" + s.chapter)));
-    D.compare.forEach((c) => add("Résumé", "À ne pas confondre : " + c.title, c.rows.map((r) => r.join(" ")).join(" "), "#/resumes"));
-    D.memo.forEach((m) => add("Résumé", "Fiche express", m.fr, "#/resumes"));
+    (D.summaries || []).forEach((s) => s.cards.forEach((c) => add("Résumé", chapById[s.chapter].title + " — " + c.h, c.fr.join(" "), "#/resumes?c=" + s.chapter)));
+    (D.compare || []).forEach((c) => add("Résumé", "À ne pas confondre : " + c.title, c.rows.map((r) => r.join(" ")).join(" "), "#/resumes"));
+    (D.memo || []).forEach((m) => add("Résumé", "Fiche express", m.fr, "#/resumes"));
     D.devoirs.forEach((d) => add("Devoir", d.titre, d.intro, "#/devoir/" + d.id));
+    if (App.extraSearch) App.extraSearch(add);
     D.questions.forEach((q) => {
       const dv = /^D\d/.test(q.id) ? q.id.split("-")[0] : null;
       add(dv ? "Devoir" : "Exercice", (dv ? dv + " · " : "") + strip(q.statement).slice(0, 90), strip(q.statement) + " " + (q.code ? q.code.text : "") + " " + (q.explanation || ""), dv ? "#/devoir/" + dv : "#/exercices/run?ids=" + q.id);

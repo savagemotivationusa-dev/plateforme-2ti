@@ -1,0 +1,88 @@
+/* ==========================================================================
+   Mathématiques — styles propres au contenu converti du document Word
+   (encadrés, exemples, exercices, tableaux, figures, dialecte tunisien).
+   ========================================================================== */
+:root {
+  --dia-soft: #fcf8e3; --dia: #9a7b0a;
+  --math-font: "Cambria Math", "STIX Two Math", "Noto Sans Math", "Segoe UI Symbol", var(--font);
+}
+:root[data-theme="dark"] { --dia-soft: #2f2a12; --dia: #e3c04a; }
+
+/* Sélecteur de matière */
+.subject-switch { display: flex; gap: 4px; margin: 0 0 12px; padding: 4px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; }
+.subject-switch .subj { flex: 1; text-align: center; padding: 8px 4px; border-radius: 9px; font-size: .8rem; white-space: nowrap; font-weight: 600; color: var(--text); }
+.subject-switch .subj:hover { text-decoration: none; background: var(--surface); }
+.subject-switch .subj.on { background: var(--accent); color: var(--accent-ink); }
+
+/* Contenu des leçons */
+.lesson-html { font-size: 1rem; line-height: 1.7; overflow-wrap: anywhere; }
+.lesson-html p { margin: 0 0 .65em; }
+.lesson-html p.calc { margin-left: 1.1em; padding-left: .8em; border-left: 3px solid var(--border); font-family: var(--math-font); white-space: pre-wrap; }
+.lesson-html p.ctr { text-align: center; font-family: var(--math-font); white-space: pre-wrap; }
+.lesson-html .box p.ctr { font-size: 1.04rem; }
+.lesson-html p.rtl, .lesson-html .rtl { direction: rtl; text-align: right; font-family: var(--font-ar); font-size: 1.05rem; line-height: 1.95; }
+.lesson-html strong { font-weight: 700; }
+
+.box { border: 1px solid var(--border); border-left-width: 5px; border-radius: var(--radius-sm); padding: 12px 16px; margin: 14px 0; background: var(--surface-2); }
+.box > :last-child { margin-bottom: 0; }
+.box-title { font-weight: 700; margin-bottom: 6px; }
+.b-def { background: var(--info-soft); border-left-color: var(--info); }
+.b-def .box-title { color: var(--info); }
+.b-prop, .b-sum { background: var(--ok-soft); border-left-color: var(--ok); }
+.b-prop .box-title, .b-sum .box-title { color: var(--ok); }
+.b-method { background: var(--warn-soft); border-left-color: var(--warn); }
+.b-method .box-title { color: var(--warn); }
+.b-err { background: var(--err-soft); border-left-color: var(--err); }
+.b-err .box-title { color: var(--err); }
+.b-dialect { background: var(--dia-soft); border-left-color: var(--dia); }
+.b-dialect .box-title { color: var(--dia); }
+.b-info { background: var(--accent-soft); border-left-color: var(--accent); }
+.b-note { background: var(--surface-2); border-left-color: var(--muted); }
+
+.ex-block { border: 1px solid var(--border); border-left: 5px solid var(--star); background: var(--star-soft); border-radius: var(--radius-sm); padding: 12px 16px; margin: 14px 0; }
+.ex-title { color: var(--star); margin: 0 0 6px; font-size: 1rem; }
+.ex-block .resol { margin: 10px 0 4px; font-size: .9rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+
+.exo { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px; margin: 14px 0; background: var(--surface); }
+.exo-title { margin: 0 0 8px; font-size: 1rem; padding: 6px 10px; background: var(--surface-2); border-radius: 8px; }
+.exo-title em { color: var(--muted); font-weight: 400; font-size: .85em; }
+details.corr { margin-top: 8px; border: 1px dashed var(--border); border-radius: 8px; padding: 6px 12px; }
+details.corr > summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+details.corr[open] > summary { margin-bottom: 8px; }
+
+.doc-tbl { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.doc-tbl th { background: var(--accent); color: var(--accent-ink); text-align: center; text-transform: none; letter-spacing: 0; font-size: .92rem; white-space: normal; }
+.doc-tbl td { font-family: var(--math-font); }
+.doc-tbl td.c, .doc-tbl th.c { text-align: center; }
+.lesson-html .doc-tbl td, .lesson-html .doc-tbl th { padding: 7px 11px; border: 1px solid var(--border); }
+.tbl.doc-tbl td { vertical-align: middle; }
+.table-wrap .doc-tbl td { white-space: normal; }
+
+.figure { margin: 14px 0; text-align: center; }
+.fig { max-width: 100%; height: auto; background: #fff; padding: 6px; border: 1px solid var(--border); border-radius: 10px; }
+figcaption { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+
+/* En-tête de leçon */
+.provenance { font-size: .9rem; margin: 8px 0 0; font-style: italic; }
+.lesson-plan { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 14px; font-size: .88rem; }
+.chip.sm { padding: 3px 10px; font-size: .8rem; }
+.sec.step > h2 { gap: 10px; }
+.step-n { display: inline-grid; place-items: center; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font: 700 .85rem var(--font); }
+.chap-intro { margin: 16px 0; }
+.chap-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.num-ico { display: grid; place-items: center; font: 800 1.3rem var(--font); color: var(--accent); }
+.express-list li { margin: .5em 0; }
+.q-hint { color: var(--muted); font-size: .86rem; margin: 0 0 6px; }
+.math-bar button { font-family: var(--math-font); font-weight: 600; }
+.doc-corr .lesson-html p { margin-bottom: .5em; }
+
+@media (max-width: 760px) {
+  .lesson-html p.calc { margin-left: .4em; padding-left: .6em; }
+  .lesson-plan { display: none; }
+}
+@media print { .lesson-plan, .subject-switch { display: none !important; } details.corr:not([open]) > * { display: block !important; } }
+
+/* Empêche un tableau large d'élargir la page sur mobile */
+main#view { min-width: 0; }
+@media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.chips { max-width: 100%; }

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plateforme 2TI — Mathématiques</title>
+  <meta name="description" content="Plateforme d'étude de mathématiques pour la 2ème année secondaire, section Technologie de l'informatique (2TI), Tunisie : cours détaillé, méthodes, exercices corrigés, devoirs avec barème sur 20 et correction automatique.">
+  <meta name="theme-color" content="#3552d6">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/maths.css">
+  <script>
+    /* Thème appliqué avant l'affichage (partagé avec la matière Informatique). */
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("plateforme2ti:theme") || (JSON.parse(localStorage.getItem("plateforme2ti:maths:v1")) || {}).theme; } catch (e) {}
+      if (!t) t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+    /* Configuration de la coque (voir js/app.js). */
+    window.STORE_KEY = "plateforme2ti:maths:v1";
+    window.APP_SUBJECTS = [
+      { label: "Informatique", href: "../index.html" },
+      { label: "Mathématiques", href: "index.html", current: true }
+    ];
+    window.APP_NAV = [
+      ["", "Apprendre"],
+      ["accueil", "Accueil", "home"], ["cours", "Cours", "book"], ["fiches", "Fiches de révision", "list"],
+      ["formulaire", "Formulaire", "flow"], ["methodes", "Méthodes et erreurs", "check"], ["glossaire", "Glossaire et index", "info"],
+      ["", "S'entraîner"],
+      ["exercices", "Générateur d'exercices", "pencil"], ["devoirs", "Devoirs (/20)", "file"],
+      ["revision", "Réviser mes erreurs", "refresh"],
+      ["", "Suivi"],
+      ["progression", "Progression", "chart"], ["correction", "Dernière correction", "check"],
+      ["notes", "Notes de contenu", "info"]
+    ];
+    window.APP_ALIAS = { "": "accueil", lecon: "cours", devoir: "devoirs", recherche: "" };
+  </script>
+</head>
+<body>
+  <a class="skip" href="#view">Aller au contenu</a>
+
+  <header class="topbar">
+    <button id="menuBtn" class="icon-btn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="sidebar"></button>
+    <a class="brand" href="#/accueil" aria-label="Accueil Mathématiques">
+      <span class="logo">2TI</span>
+      <span>Mathématiques<small>2ème année secondaire</small></span>
+    </a>
+    <form id="searchForm" class="search" role="search" autocomplete="off">
+      <label class="sr-only" for="searchInput" style="position:absolute;left:-999px">Rechercher</label>
+      <input id="searchInput" type="search" placeholder="Rechercher : discriminant, suite, droite, PGCD…" aria-autocomplete="list" aria-controls="suggest">
+      <div id="suggest" class="suggest" hidden></div>
+    </form>
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Changer de thème"></button>
+  </header>
+
+  <div class="layout">
+    <nav id="sidebar" class="sidebar" aria-label="Navigation principale"></nav>
+    <div id="scrim" class="scrim"></div>
+    <main id="view" tabindex="-1" aria-live="polite"></main>
+  </div>
+
+  <noscript><p style="padding:24px">Cette plateforme nécessite JavaScript pour fonctionner.</p></noscript>
+
+  <script src="data/chapters.js"></script>
+  <script src="data/course-m0.js"></script>
+  <script src="data/course-m1.js"></script>
+  <script src="data/course-m2.js"></script>
+  <script src="data/course-m3.js"></script>
+  <script src="data/course-m4.js"></script>
+  <script src="data/course-m5.js"></script>
+  <script src="data/course-m6.js"></script>
+  <script src="data/annexes.js"></script>
+  <script src="data/questions-m0-m2.js"></script>
+  <script src="data/questions-m3-m4.js"></script>
+  <script src="data/questions-m5-m6.js"></script>
+  <script src="data/questions-devoirs.js"></script>
+  <script src="data/devoirs.js"></script>
+  <script src="../js/store.js"></script>
+  <script src="../js/mathcheck.js"></script>
+  <script src="../js/grader.js"></script>
+  <script src="../js/ui.js"></script>
+  <script src="../js/views-maths.js"></script>
+  <script src="../js/views-practice.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>
